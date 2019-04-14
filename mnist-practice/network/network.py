@@ -74,4 +74,32 @@ class Network(object):
         pass
 
     def backpropagation(self, x, y):
-        return [1], [2]
+        """
+        Return a tuple representing the gradient for the cost function.
+        :param x: input
+        :param y: desired output
+        :return: (bias gradient, weight gradient)
+        """
+        nabla_b = [numpy.zeros(b.shape) for b in self.biases]
+        nabla_w = [numpy.zeros(w.shape) for w in self.weights]
+
+        activation = x
+        activations = [x]  # layer by layer activations
+        zs = []  # layer by layer z vectors
+        for b, w in zip(self.biases, self.weights):
+            z = numpy.dot(w, activation) + b
+            zs.append(z)
+            activation = sigmoid(z)
+            activations.append(activation)
+
+        delta = self.cost_derivative(activations[-1], y) * sigmoid_prime(zs[-1])
+        nabla_b[-1] = delta
+        nabla_w[-1] = numpy.dot(delta, activations[-2].transpose())
+
+        for l in range(2, self.num_layers):
+            z = zs[-1]
+            sp = sigmoid_prime(z)
+            delta = numpy.dot(self.weights[-l + 1].transpose(), delta) * sp
+            nabla_b[-1] = delta
+            nabla_w[-1] = numpy.dot(delta, activations[-l - 1].transpose())
+        return (nabla_b, nabla_w)
