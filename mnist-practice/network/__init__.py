@@ -1,0 +1,1 @@
+""" MNIST hello world practice """
