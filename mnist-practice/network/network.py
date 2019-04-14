@@ -9,6 +9,21 @@ def sigmoid(x):
     return 1.0 / (1.0 + numpy.exp(-x))
 
 
+def sigmoid_prime(x):
+    """ Derivative of sigmoid function """
+    return sigmoid(x) * (1 - sigmoid(x))
+
+
+def cost_derivative(output_activations, y):
+    """
+    Get the vector of partial derivatives for the output activations.
+    :param output_activations: vector of layer output activations
+    :param y: desired outcome
+    :return:
+    """
+    return output_activations - y
+
+
 class Network(object):
     """ Network class """
 
@@ -71,7 +86,13 @@ class Network(object):
         self.biases = [b - (eta / len(min(mini_batch)) * nb for b, nb in zip(self.biases, nabla_b))]
 
     def evaluate(self, test_data):
-        pass
+        """
+        Get the number of test inputs for which the networks outputs the correct result. Output is the index of
+        whichever neuron in the final layer has the highest activation.
+        :param test_data: data to perform testing against
+        """
+        test_results = [numpy.argmax(self.feed_forward(x), y) for (x, y) in test_data]
+        return sum(int(x == y) for (x, y) in test_results)
 
     def backpropagation(self, x, y):
         """
@@ -92,7 +113,7 @@ class Network(object):
             activation = sigmoid(z)
             activations.append(activation)
 
-        delta = self.cost_derivative(activations[-1], y) * sigmoid_prime(zs[-1])
+        delta = cost_derivative(activations[-1], y) * sigmoid_prime(zs[-1])
         nabla_b[-1] = delta
         nabla_w[-1] = numpy.dot(delta, activations[-2].transpose())
 
@@ -102,4 +123,4 @@ class Network(object):
             delta = numpy.dot(self.weights[-l + 1].transpose(), delta) * sp
             nabla_b[-1] = delta
             nabla_w[-1] = numpy.dot(delta, activations[-l - 1].transpose())
-        return (nabla_b, nabla_w)
+        return nabla_b, nabla_w
