@@ -66,9 +66,7 @@ class Network:
 
         for j in range(epochs):
             random.shuffle(training_data)
-            mini_batches = [
-                training_data[k:k + mini_batch_size]
-                for k in range(0, n, mini_batch_size)]
+            mini_batches = [training_data[k:k + mini_batch_size] for k in range(0, n, mini_batch_size)]
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
             if test_data:
@@ -86,10 +84,11 @@ class Network:
         nabla_w = [numpy.zeros(w.shape) for w in self.weights]
         for x, y in mini_batch:
             delta_nabla_b, delta_nabla_w = self.backpropagation(x, y)
-            nabla_b = [nb + dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
-            nabla_w = [nw + dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
-        self.weights = [w - (eta / len(mini_batch)) * nw for w, nw in zip(self.weights, nabla_w)]
-        self.biases = [b - (eta / len(mini_batch)) * nb for b, nb in zip(self.biases, nabla_b)]
+            nabla_b = [new_bias + delta_new_bias for new_bias, delta_new_bias in zip(nabla_b, delta_nabla_b)]
+            nabla_w = [new_weight + delta_new_weight for new_weight, delta_new_weight in zip(nabla_w, delta_nabla_w)]
+        self.weights = [weight - (eta / len(mini_batch)) * new_weight for weight, new_weight in
+                        zip(self.weights, nabla_w)]
+        self.biases = [bias - (eta / len(mini_batch)) * new_bias for bias, new_bias in zip(self.biases, nabla_b)]
 
     def evaluate(self, test_data):
         """
