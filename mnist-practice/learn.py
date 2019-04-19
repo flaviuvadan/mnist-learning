@@ -9,19 +9,21 @@ class Parameters:
     middle_layer = 30
     output_layer = 10
 
-    epochs = 30
-    mini_batch_size = 10
-    learning_rate = 3.0
+    def __init__(self, epochs, batch_size, learning_rate):
+        """ Init function """
+        self.epochs = epochs
+        self.batch_size = batch_size
+        self.learning_rate = learning_rate
 
 
 def start():
-    parameters = Parameters()
+    """ Start learning """
+    parameters = Parameters(30, 10, 3.0)
     load = loader.Loader()
     net = network.Network([parameters.input_layer, parameters.middle_layer, parameters.output_layer])
 
     training_data, _, test_data = load.load_data()
-    net.stochastic_gradient_descent(training_data, parameters.epochs, parameters.mini_batch_size,
-                                    parameters.learning_rate,
+    net.stochastic_gradient_descent(training_data, parameters.epochs, parameters.batch_size, parameters.learning_rate,
                                     test_data=test_data)
 
 
