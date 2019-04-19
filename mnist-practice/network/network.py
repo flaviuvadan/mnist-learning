@@ -3,25 +3,7 @@
 import numpy
 import random
 
-
-def sigmoid(x):
-    """ Sigmoid function """
-    return 1.0 / (1.0 + numpy.exp(-x))
-
-
-def sigmoid_prime(x):
-    """ Derivative of sigmoid function """
-    return sigmoid(x) * (1 - sigmoid(x))
-
-
-def cost_derivative(output_activations, y):
-    """
-    Get the vector of partial derivatives for the output activations.
-    :param output_activations: vector of layer output activations
-    :param y: desired outcome
-    :return:
-    """
-    return output_activations - y
+from .functions import Functions
 
 
 class Network:
@@ -44,7 +26,7 @@ class Network:
         :return: output of the network given a
         """
         for b, w in zip(self.biases, self.weights):
-            a = sigmoid(numpy.dot(w, a) + b)
+            a = Functions.sigmoid(numpy.dot(w, a) + b)
         return a
 
     def stochastic_gradient_descent(self, training_data, epochs, mini_batch_size, eta, test_data=None):
@@ -116,11 +98,12 @@ class Network:
         for b, w in zip(self.biases, self.weights):
             z = numpy.dot(w, activation) + b
             zs.append(z)
-            activation = sigmoid(z)
+            activation = Functions.sigmoid(z)
             activations.append(activation)
 
         # backward pass
-        delta = cost_derivative(activations[-1], y) * sigmoid_prime(zs[-1])
+        # this is the error of the last layer
+        delta = Functions.simple_cost(activations[-1], y) * Functions.sigmoid_prime(zs[-1])
         nabla_b[-1] = delta
         nabla_w[-1] = numpy.dot(delta, activations[-2].transpose())
 
@@ -132,8 +115,7 @@ class Network:
         # that Python can use negative indices in lists.
         for l in range(2, self.num_layers):
             z = zs[-l]
-            sp = sigmoid_prime(z)
-            delta = numpy.dot(self.weights[-l + 1].transpose(), delta) * sp
+            delta = numpy.dot(self.weights[-l + 1].transpose(), delta) * Functions.sigmoid_prime(z)
             nabla_b[-l] = delta
             nabla_w[-l] = numpy.dot(delta, activations[-l - 1].transpose())
         return nabla_b, nabla_w
