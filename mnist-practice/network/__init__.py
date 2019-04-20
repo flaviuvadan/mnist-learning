@@ -1,4 +1,4 @@
 """ MNIST hello world practice """
 
 from . import loader
-from . import network
+from . import network_test_1
