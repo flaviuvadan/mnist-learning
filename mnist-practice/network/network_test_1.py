@@ -1,4 +1,4 @@
-""" Network class file """
+""" Network test 1 """
 
 import numpy
 import random
@@ -7,15 +7,15 @@ from .functions import Functions
 from .network_blueprint import NetworkBlueprint
 
 
-class Network(NetworkBlueprint):
-    """ Network class """
+class NetworkTest1(NetworkBlueprint):
+    """ Network Test 1 """
 
     def __init__(self, sizes):
         """
         Init function.
         :param sizes: [number of neurons in their respective layers]
         """
-        super(Network, self).__init__(sizes)
+        super(NetworkTest1, self).__init__(sizes)
 
     def init_biases(self):
         """ Randomly initialize weights from a standard normal """
