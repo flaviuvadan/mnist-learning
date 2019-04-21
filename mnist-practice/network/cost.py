@@ -64,7 +64,8 @@ class QuadraticCost(Cost):
         """ Compute error of an output layer """
         return 1 / 2 * numpy.linalg.norm(a - y) ** 2
 
-    def delta(self, z, a, y):
+    @staticmethod
+    def delta(z, a, y):
         """ Get the delta of the cost function """
         return (a - y) * Functions.sigmoid_prime(z)
 
@@ -79,7 +80,7 @@ class CrossEntropyCost(Cost):
     @staticmethod
     def fn(a, y):
         """ Compute error of an output layer """
-        pass
+        return numpy.sum(numpy.nan_to_num(-y * numpy.log(a) - (1 - y) * numpy.log(1 - a)))
 
     @staticmethod
     def delta(z, a, y):

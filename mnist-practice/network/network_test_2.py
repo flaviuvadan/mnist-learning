@@ -36,7 +36,7 @@ class NetworkTest2(NetworkBlueprint):
         :param epochs: number of training epochs
         :param mini_batch_size: size of training set/epoch
         :param eta: learning rate float
-        :param lmbda: lambda (b/c lambda is a Python built-in) regularization parameter
+        :param lmbda: lambda (b/c lambda is a Python built-in) L2 regularization parameter
         :param evaluation_data: test set to assess performance of the network
         :param monitor_evaluation_cost: boolean
         :param monitor_evaluation_accuracy: boolean
@@ -46,7 +46,10 @@ class NetworkTest2(NetworkBlueprint):
         """
         n_data = None
         if evaluation_data:
+            evaluation_data = list(evaluation_data)
             n_data = len(evaluation_data)
+
+        training_data = list(training_data)
         n = len(training_data)
 
         evaluation_cost = []
@@ -59,27 +62,27 @@ class NetworkTest2(NetworkBlueprint):
             mini_batches = [training_data[k:k + mini_batch_size] for k in range(0, n, mini_batch_size)]
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta, lmbda, len(training_data))
-            print("Epoch {} training complete".format(j))
 
             if monitor_training_cost:
                 cost = self.total_cost(training_data, lmbda)
                 training_cost.append(cost)
-                print("Cost on training data: {}".format(cost))
+                print("Cost on training data:\t{}".format(cost))
 
             if monitor_training_accuracy:
                 accuracy = self.accuracy(training_data, convert=True)
                 training_accuracy.append(accuracy)
-                print("Accuracy on training data: {} / {}".format(accuracy, n))
+                print("Accuracy on training data:\t{} / {}".format(accuracy, n))
 
             if monitor_evaluation_cost:
                 cost = self.total_cost(evaluation_data, lmbda, convert=True)
                 evaluation_cost.append(cost)
-                print("Cost on evaluation data: {} ".format(cost))
+                print("Cost on evaluation data:\t{} ".format(cost))
 
             if monitor_evaluation_accuracy:
                 accuracy = self.accuracy(evaluation_data)
                 evaluation_accuracy.append(accuracy)
-                print("Accuracy on evaluation data: {} / {}\n".format(accuracy, n_data))
+                print("Accuracy on evaluation data:\t{} / {}".format(accuracy, n_data))
+            print("Epoch {} training complete\n\n".format(j + 1))
         return evaluation_cost, evaluation_accuracy, training_cost, training_accuracy
 
     def update_mini_batch(self, mini_batch, eta, lmbda, n):
@@ -87,7 +90,7 @@ class NetworkTest2(NetworkBlueprint):
         Update the network's weights and biases by applying SGD using backpropagation to a single batch
         :param training_data: [(x, y)] training points
         :param eta: learning rate float
-        :param lmbda: lambda (b/c lambda is a Python built-in) regularization parameter
+        :param lmbda: lambda (b/c lambda is a Python built-in) L2 regularization parameter
         :param n: size of training data set
         """
         nabla_b = [numpy.zeros(b.shape) for b in self.biases]
@@ -121,7 +124,7 @@ class NetworkTest2(NetworkBlueprint):
         """
         Get the total cost for the set data.
         :param data: [(x, y)]
-        :param lmbda: lambda (b/c lambda is a Python built-in) regularization parameter
+        :param lmbda: lambda (b/c lambda is a Python built-in) L2 regularization parameter
         :param convert: False if data is validation/test set, True if data is training set
         :return: cost float
         """

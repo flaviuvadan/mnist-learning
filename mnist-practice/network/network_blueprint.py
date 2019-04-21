@@ -1,12 +1,9 @@
 """ Network class blueprint that networks with different configurations can inherit from """
 
-import json
 import numpy
-import sys
 
 from .cost import SimpleCost
 from .functions import Functions
-from .nets import NETS
 
 
 class NetworkBlueprint:
@@ -76,28 +73,3 @@ class NetworkBlueprint:
             nabla_b[-l] = delta
             nabla_w[-l] = numpy.dot(delta, activations[-l - 1].transpose())
         return nabla_b, nabla_w
-
-    def save(self, filename):
-        """ Save the network config to filename """
-        data = {
-            "sizes": self.sizes,
-            "weights": [w.tolist() for w in self.weights],
-            "biases": [b.tolist() for b in self.biases],
-            "cost": str(self.cost.__name__),
-            "net": str(self.__name__)
-        }
-
-        with open(filename, "w") as f:
-            json.dump(data, f)
-
-    def load(self, filename):
-        """ Load the network config from filename """
-        with open(filename, "r") as f:
-            data = json.loads(f)
-            cost = getattr(sys.modules[__name__], data["cost"])
-            net_name = getattr(sys.modules[__name__], data["net"])
-            net_type = NETS.get(net_name)
-            net = net_type(data["sizes"], cost=cost)
-            net.weights = [numpy.array(w) for w in data["weights"]]
-            net.biases = [numpy.array(b) for b in data["biases"]]
-            return net
