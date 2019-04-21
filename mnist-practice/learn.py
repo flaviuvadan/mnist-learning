@@ -1,6 +1,6 @@
 """ Learn uses the loader to feed the network and perform classification """
 
-from network import loader, network_test_1
+from network import cost, loader, network_test_1
 
 
 def start():

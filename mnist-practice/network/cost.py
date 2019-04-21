@@ -1,6 +1,8 @@
-""" Holds cost functons' classes """
+""" Holds cost functions' classes """
 
 import numpy
+
+from .functions import Functions
 
 
 class Cost:
@@ -64,7 +66,7 @@ class QuadraticCost(Cost):
 
     def delta(self, z, a, y):
         """ Get the delta of the cost function """
-        return a - y
+        return (a - y) * Functions.sigmoid_prime(z)
 
 
 class CrossEntropyCost(Cost):

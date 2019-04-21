@@ -3,19 +3,19 @@
 import numpy
 import random
 
-from .functions import Functions
+from .cost import SimpleCost
 from .network_blueprint import NetworkBlueprint
 
 
 class NetworkTest1(NetworkBlueprint):
     """ Network Test 1 """
 
-    def __init__(self, sizes):
+    def __init__(self, sizes, cost=SimpleCost):
         """
         Init function.
         :param sizes: [number of neurons in their respective layers]
         """
-        super(NetworkTest1, self).__init__(sizes)
+        super(NetworkTest1, self).__init__(sizes, cost)
 
     def init_biases(self):
         """ Randomly initialize weights from a standard normal """
@@ -51,10 +51,6 @@ class NetworkTest1(NetworkBlueprint):
                 print("Epoch {} : {} / {}".format(j, self.evaluate(test_data), n_test))
             else:
                 print("Epoch {} complete".format(j))
-
-    def cost(self, x, y):
-        """ Compute error of the output layer """
-        return Functions.simple_cost(x, y)
 
     def evaluate(self, test_data):
         """

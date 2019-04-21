@@ -2,13 +2,14 @@
 
 import numpy
 
+from .cost import SimpleCost
 from .functions import Functions
 
 
 class NetworkBlueprint:
     """ Parent network class """
 
-    def __init__(self, sizes, cost):
+    def __init__(self, sizes, cost=SimpleCost):
         """ Init function """
         self.num_layers = len(sizes)
         self.sizes = sizes
@@ -61,10 +62,6 @@ class NetworkBlueprint:
                         zip(self.weights, nabla_w)]
         self.biases = [bias - (eta / len(mini_batch)) * new_bias for bias, new_bias in zip(self.biases, nabla_b)]
 
-    def cost(self, x, y):
-        """ Cost function """
-        raise NotImplementedError
-
     def backpropagation(self, x, y):
         """
         Return a tuple representing the gradient for the cost function.
@@ -87,7 +84,7 @@ class NetworkBlueprint:
 
         # backward pass
         # this is the error of the last layer
-        delta = self.cost(activations[-1], y) * Functions.sigmoid_prime(zs[-1])
+        delta = self.cost.fn(activations[-1], y) * Functions.sigmoid_prime(zs[-1])
         nabla_b[-1] = delta
         nabla_w[-1] = numpy.dot(delta, activations[-2].transpose())
 
