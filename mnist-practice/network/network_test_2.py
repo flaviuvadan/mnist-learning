@@ -9,7 +9,7 @@ from .network_blueprint import NetworkBlueprint
 
 
 class NetworkTest2(NetworkBlueprint):
-    """ Network Test 2 """
+    """ Second network test """
 
     def __init__(self, sizes, cost=CrossEntropyCost):
         """ Init function """
