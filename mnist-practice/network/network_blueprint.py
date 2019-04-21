@@ -1,9 +1,12 @@
 """ Network class blueprint that networks with different configurations can inherit from """
 
+import json
 import numpy
+import sys
 
 from .cost import SimpleCost
 from .functions import Functions
+from .nets import NETS
 
 
 class NetworkBlueprint:
@@ -34,33 +37,6 @@ class NetworkBlueprint:
         for b, w in zip(self.biases, self.weights):
             a = Functions.sigmoid(numpy.dot(w, a) + b)
         return a
-
-    def stochastic_gradient_descent(self, training_data, epochs, mini_batch_size, eta, test_data=None):
-        """
-        Train the network using a mini batch size of the training data
-        :param training_data: [(input, output)]
-        :param epochs: number of training steps
-        :param mini_batch_size: training data batch size
-        :param eta: learning rate
-        :param test_data: the data to perform testing against
-        """
-        raise NotImplementedError
-
-    def update_mini_batch(self, mini_batch, eta):
-        """
-        Update the network's weights and biases by applying gradient descent using back-propagation to a single batch
-        :param mini_batch: [(input, output)]
-        :param eta: learning rate
-        """
-        nabla_b = [numpy.zeros(b.shape) for b in self.biases]
-        nabla_w = [numpy.zeros(w.shape) for w in self.weights]
-        for x, y in mini_batch:
-            delta_nabla_b, delta_nabla_w = self.backpropagation(x, y)
-            nabla_b = [new_bias + delta_new_bias for new_bias, delta_new_bias in zip(nabla_b, delta_nabla_b)]
-            nabla_w = [new_weight + delta_new_weight for new_weight, delta_new_weight in zip(nabla_w, delta_nabla_w)]
-        self.weights = [weight - (eta / len(mini_batch)) * new_weight for weight, new_weight in
-                        zip(self.weights, nabla_w)]
-        self.biases = [bias - (eta / len(mini_batch)) * new_bias for bias, new_bias in zip(self.biases, nabla_b)]
 
     def backpropagation(self, x, y):
         """
@@ -100,3 +76,28 @@ class NetworkBlueprint:
             nabla_b[-l] = delta
             nabla_w[-l] = numpy.dot(delta, activations[-l - 1].transpose())
         return nabla_b, nabla_w
+
+    def save(self, filename):
+        """ Save the network config to filename """
+        data = {
+            "sizes": self.sizes,
+            "weights": [w.tolist() for w in self.weights],
+            "biases": [b.tolist() for b in self.biases],
+            "cost": str(self.cost.__name__),
+            "net": str(self.__name__)
+        }
+
+        with open(filename, "w") as f:
+            json.dump(data, f)
+
+    def load(self, filename):
+        """ Load the network config from filename """
+        with open(filename, "r") as f:
+            data = json.loads(f)
+            cost = getattr(sys.modules[__name__], data["cost"])
+            net_name = getattr(sys.modules[__name__], data["net"])
+            net_type = NETS.get(net_name)
+            net = net_type(data["sizes"], cost=cost)
+            net.weights = [numpy.array(w) for w in data["weights"]]
+            net.biases = [numpy.array(b) for b in data["biases"]]
+            return net

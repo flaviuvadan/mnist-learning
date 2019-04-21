@@ -52,6 +52,22 @@ class NetworkTest1(NetworkBlueprint):
             else:
                 print("Epoch {} complete".format(j))
 
+    def update_mini_batch(self, mini_batch, eta):
+        """
+        Update the network's weights and biases by applying gradient descent using back-propagation to a single batch
+        :param mini_batch: [(input, output)]
+        :param eta: learning rate
+        """
+        nabla_b = [numpy.zeros(b.shape) for b in self.biases]
+        nabla_w = [numpy.zeros(w.shape) for w in self.weights]
+        for x, y in mini_batch:
+            delta_nabla_b, delta_nabla_w = self.backpropagation(x, y)
+            nabla_b = [new_bias + delta_new_bias for new_bias, delta_new_bias in zip(nabla_b, delta_nabla_b)]
+            nabla_w = [new_weight + delta_new_weight for new_weight, delta_new_weight in zip(nabla_w, delta_nabla_w)]
+        self.weights = [weight - (eta / len(mini_batch)) * new_weight for weight, new_weight in
+                        zip(self.weights, nabla_w)]
+        self.biases = [bias - (eta / len(mini_batch)) * new_bias for bias, new_bias in zip(self.biases, nabla_b)]
+
     def evaluate(self, test_data):
         """
         Get the number of test inputs for which the networks outputs the correct result. Output is the index of
