@@ -8,19 +8,20 @@ from .functions import Functions
 class NetworkBlueprint:
     """ Parent network class """
 
-    def __init__(self, sizes):
+    def __init__(self, sizes, cost):
         """ Init function """
         self.num_layers = len(sizes)
         self.sizes = sizes
         self.biases = self.init_biases()
         self.weights = self.init_weights()
+        self.cost = cost
 
     def init_biases(self):
-        """ Initialize the biases and weights of the network """
+        """ Initialize the biases of the network """
         raise NotImplementedError
 
     def init_weights(self):
-        """ Initialize the biases and weights of the network """
+        """ Initialize the weights of the network """
         raise NotImplementedError
 
     def feed_forward(self, a):
