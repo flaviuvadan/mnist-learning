@@ -48,9 +48,9 @@ class NetworkTest1(NetworkBlueprint):
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
             if test_data:
-                print("Epoch {} : {} / {}".format(j, self.evaluate(test_data), n_test))
+                print("Epoch {} : {} / {}".format(j + 1, self.evaluate(test_data), n_test))
             else:
-                print("Epoch {} complete".format(j))
+                print("Epoch {} complete".format(j + 1))
 
     def update_mini_batch(self, mini_batch, eta):
         """

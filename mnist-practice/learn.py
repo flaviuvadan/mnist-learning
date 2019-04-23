@@ -18,9 +18,9 @@ def start():
     net2.stochastic_gradient_descent(training_data, 30, 10, 0.5, 5,
                                      evaluation_data=test_data,
                                      monitor_evaluation_accuracy=True,
-                                     monitor_evaluation_cost=True,
+                                     monitor_evaluation_cost=False,
                                      monitor_training_accuracy=True,
-                                     monitor_training_cost=True)
+                                     monitor_training_cost=False)
 
 
 start()
