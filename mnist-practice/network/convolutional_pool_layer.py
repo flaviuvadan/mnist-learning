@@ -2,11 +2,14 @@
 
 import numpy
 import theano
+from theano.tensor.nnet import conv
+from theano.tensor.signal import pool
 
+from .conv_layer_blueprint import ConvLayerBlueprint
 from .functions import Functions
 
 
-class ConvPoolLayer:
+class ConvPoolLayer(ConvLayerBlueprint):
     """ This layer is used to create a combination of convolutional and max-pooling layer. """
 
     def __init__(self, filter_shape, image_shape, poolsize=(2, 2), activation_fn=Functions.sigmoid):
@@ -23,6 +26,9 @@ class ConvPoolLayer:
         self.activation_fn = activation_fn
         self.weights = None
         self.biases = None
+        self.inpt = None
+        self.output = None
+        self.output_dropout = None
         self.init_weights()
         self.init_biases()
 
@@ -44,3 +50,21 @@ class ConvPoolLayer:
                 numpy.random.normal(loc=0, scale=1.0, size=(self.filter_shape[0],)),
                 dtype=theano.config.floatX),
             borrow=True)
+
+    def set_inpt(self, inpt, inpt_dropout, mini_batch_size):
+        """
+
+        :param inpt:
+        :param inpt_dropout:
+        :param mini_batch_size: mini batch size
+        """
+        self.inpt = inpt.reshape(self.image_shape)
+        conv_out = conv.conv2d(self.inpt, self.weights,
+                               filter_shape=self.filter_shape,
+                               image_shape=self.image_shape)
+        pooled_out = pool.pool_2d(conv_out,
+                                  ds=self.poolsize,
+                                  ignore_border=True)
+        self.output = self.activation_fn(pooled_out + self.biases.dimshuffle('x', 0, 'x', 'x'))
+        # no dropout in the conv layers
+        self.output_dropout = self.output
