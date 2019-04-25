@@ -1,5 +1,8 @@
 """ Convolutional pool layer """
 
+import numpy
+import theano
+
 from .functions import Functions
 
 
@@ -24,7 +27,20 @@ class ConvPoolLayer:
         self.init_biases()
 
     def init_weights(self):
-        pass
+        """ Initialize the weights of the layer """
+        n_out = (self.filter_shape[0] * numpy.prod(self.filter_shape[2:]) / numpy.prod(self.poolsize))
+        self.weights = theano.shared(
+            numpy.asarray(
+                numpy.random.normal(loc=0, scale=numpy.sqrt(1 / n_out), size=self.filter_shape),
+                dtype=theano.config.floatX,
+            ),
+            borrow=True,
+        )
 
     def init_biases(self):
-        pass
+        """ Initialize the biases of the layer """
+        self.biases = theano.shared(
+            numpy.asarray(
+                numpy.random.normal(loc=0, scale=1.0, size=(self.filter_shape[0],)),
+                dtype=theano.config.floatX),
+            borrow=True)
