@@ -12,7 +12,7 @@ from .functions import Functions
 class ConvPoolLayer(ConvLayerBlueprint):
     """ This layer is used to create a combination of convolutional and max-pooling layer. """
 
-    def __init__(self, filter_shape, image_shape, poolsize=(2, 2), activation_fn=Functions.sigmoid):
+    def __init__(self, filter_shape, image_shape, pool_size=(2, 2), activation_fn=Functions.sigmoid):
         """
         Init function
         :param filter_shape: tuple(# filters, # input feature maps, filter height, filter width)
@@ -22,7 +22,7 @@ class ConvPoolLayer(ConvLayerBlueprint):
         """
         self.filter_shape = filter_shape
         self.image_shape = image_shape
-        self.poolsize = poolsize
+        self.pool_size = pool_size
         self.activation_fn = activation_fn
         self.weights = None
         self.biases = None
@@ -34,7 +34,7 @@ class ConvPoolLayer(ConvLayerBlueprint):
 
     def init_weights(self):
         """ Initialize the weights of the layer """
-        n_out = (self.filter_shape[0] * numpy.prod(self.filter_shape[2:]) / numpy.prod(self.poolsize))
+        n_out = (self.filter_shape[0] * numpy.prod(self.filter_shape[2:]) / numpy.prod(self.pool_size))
         self.weights = theano.shared(
             numpy.asarray(
                 numpy.random.normal(loc=0, scale=numpy.sqrt(1 / n_out), size=self.filter_shape),
@@ -63,7 +63,7 @@ class ConvPoolLayer(ConvLayerBlueprint):
                                filter_shape=self.filter_shape,
                                image_shape=self.image_shape)
         pooled_out = pool.pool_2d(conv_out,
-                                  ds=self.poolsize,
+                                  ds=self.pool_size,
                                   ignore_border=True)
         self.output = self.activation_fn(pooled_out + self.biases.dimshuffle('x', 0, 'x', 'x'))
         # no dropout in the conv layers
