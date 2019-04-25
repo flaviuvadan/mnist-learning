@@ -1,6 +1,6 @@
 """ Fully connected layer """
 
-from .conv_layer_blueprint import ConvLayerBlueprint
+from network.cnn.conv_layer_blueprint import ConvLayerBlueprint
 
 
 class FullyConnectedLayer(ConvLayerBlueprint):

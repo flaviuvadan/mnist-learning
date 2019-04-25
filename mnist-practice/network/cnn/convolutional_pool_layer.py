@@ -5,8 +5,8 @@ import theano
 from theano.tensor.nnet import conv
 from theano.tensor.signal import pool
 
-from .conv_layer_blueprint import ConvLayerBlueprint
-from .functions import Functions
+from network.functions import Functions
+from network.cnn.conv_layer_blueprint import ConvLayerBlueprint
 
 
 class ConvPoolLayer(ConvLayerBlueprint):
@@ -53,9 +53,9 @@ class ConvPoolLayer(ConvLayerBlueprint):
 
     def set_inpt(self, inpt, inpt_dropout, mini_batch_size):
         """
-
-        :param inpt:
-        :param inpt_dropout:
+        Input setter
+        :param inpt: image input from a layer
+        :param inpt_dropout: input dropout
         :param mini_batch_size: mini batch size
         """
         self.inpt = inpt.reshape(self.image_shape)
