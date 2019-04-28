@@ -19,12 +19,14 @@ class SoftmaxLayer(ConvLayerBlueprint):
         self.p_dropout = p_dropout
         self.weights = None
         self.biases = None
-        self.params = [self.weights, self.biases]
         self.inpt = None
         self.output = None
         self.y_out = None
         self.inpt_dropout = None
         self.output_dropout = None
+        self.init_weights()
+        self.init_biases()
+        self.params = [self.weights, self.biases]
 
     def set_inpt(self, inpt, inpt_dropout, mini_batch_size):
         """ Set input """

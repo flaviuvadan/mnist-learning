@@ -3,8 +3,7 @@
 import theano
 from theano import tensor
 import numpy
-
-from ..loader import Loader
+import pickle
 
 
 def size(data):
@@ -13,7 +12,7 @@ def size(data):
 
 
 def shared(data):
-    """ Places data into shared variables for Theno """
+    """ Places data into shared variables for Theano """
     shared_x = theano.shared(numpy.asarray(data[0],
                                            dtype=theano.config.floatX),
                              borrow=True)
@@ -25,6 +24,6 @@ def shared(data):
 
 def load_data_shared():
     """ Loads the Theano-shared MNIST data """
-    loader = Loader()
-    training_data, validation_data, test_data = loader.load_data()
-    return [shared(training_data), shared(validation_data), shared(test_data)]
+    with open('./mnist.pkl', 'rb') as f:
+        training_data, validation_data, test_data = pickle.load(f, encoding='latin1')
+    return (shared(training_data)), (shared(validation_data)), (shared(test_data))

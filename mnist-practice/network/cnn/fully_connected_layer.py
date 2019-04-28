@@ -25,6 +25,8 @@ class FullyConnectedLayer(ConvLayerBlueprint):
         self.output = None
         self.output_dropout = None
         self.y_out = None
+        self.init_weights()
+        self.init_biases()
         self.params = [self.weights, self.biases]
 
     def init_weights(self):
@@ -37,7 +39,7 @@ class FullyConnectedLayer(ConvLayerBlueprint):
                     size=(self.n_in, self.n_out)),
                 dtype=theano.config.floatX,
             ),
-            name='b',
+            name='w',
             borrow=True,
         )
 
