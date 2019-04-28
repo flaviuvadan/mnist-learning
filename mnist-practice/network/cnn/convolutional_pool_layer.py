@@ -2,7 +2,7 @@
 
 import numpy
 import theano
-from theano.tensor.nnet import conv
+from theano.tensor import nnet
 from theano.tensor.signal import pool
 
 from network.functions import Functions
@@ -31,6 +31,7 @@ class ConvPoolLayer(ConvLayerBlueprint):
         self.output_dropout = None
         self.init_weights()
         self.init_biases()
+        self.params = [self.weights, self.biases]
 
     def init_weights(self):
         """ Initialize the weights of the layer """
@@ -59,11 +60,11 @@ class ConvPoolLayer(ConvLayerBlueprint):
         :param mini_batch_size: mini batch size
         """
         self.inpt = inpt.reshape(self.image_shape)
-        conv_out = conv.conv2d(self.inpt, self.weights,
+        conv_out = nnet.conv2d(self.inpt, self.weights,
                                filter_shape=self.filter_shape,
-                               image_shape=self.image_shape)
+                               input_shape=self.image_shape)
         pooled_out = pool.pool_2d(conv_out,
-                                  ds=self.pool_size,
+                                  ws=self.pool_size,
                                   ignore_border=True)
         self.output = self.activation_fn(pooled_out + self.biases.dimshuffle('x', 0, 'x', 'x'))
         # no dropout in the conv layers

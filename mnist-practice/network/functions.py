@@ -3,10 +3,16 @@
 import json
 import numpy
 import sys
+from theano.tensor import nnet
 
 
 class Functions:
     """ Functions class """
+
+    @classmethod
+    def relu(cls, x):
+        """ Rectified linear unit function """
+        return nnet.relu(x)
 
     @classmethod
     def sigmoid(cls, x):

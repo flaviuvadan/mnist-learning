@@ -32,7 +32,7 @@ class NetworkTest3:
         self.test_mini_batch_predictions = None
 
     def stochastic_gradient_descent(self, training_data, epochs, mini_batch_size, eta, validation_data, test_data,
-                                    lmbda=0.0):
+                                    lmbda=0.0, print_mini_batch_iteration=True):
         """
         Perform stochastic gradient descent on the CNN
         :param training_data: [(x, y)]
@@ -42,6 +42,7 @@ class NetworkTest3:
         :param validation_data: [(x, y)]
         :param test_data: [(x, y)]
         :param lmbda: regularization parameter (L2)
+        :param print_mini_batch_iteration: whether to print out a message for each batch iteration
         """
         training_x, training_y = training_data
         validation_x, validation_y = validation_data
@@ -86,7 +87,7 @@ class NetworkTest3:
         for epoch in range(epochs):
             for mbi in range(training_batches):
                 iteration = training_batches * epoch + mbi
-                if iteration % 1000 == 0:
+                if iteration % 1000 == 0 and print_mini_batch_iteration:
                     print("Training mini-batch {}".format(iteration))
                 cost_ij = train_mini_batch(mbi)
                 if (iteration + 1) % training_batches == 0:
