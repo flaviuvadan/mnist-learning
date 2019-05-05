@@ -61,6 +61,7 @@ class NetworkTest3:
         mini_batch_index = tensor.lscalar()
         start = mini_batch_index * self.mini_batch_size
         end = (mini_batch_index + 1) * self.mini_batch_size
+        # a Theano symbolic function that uses updates to update the network parameters
         train_mini_batch = theano.function([mini_batch_index], cost,
                                            updates=updates,
                                            givens={
