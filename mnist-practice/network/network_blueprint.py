@@ -19,7 +19,7 @@ class NetworkBlueprint:
 
         # follow list of class variables are for monitoring different metrics
         self.accuracy_per_epoch = []
-        self.cost_per_batch = []
+        self.cost_per_epoch = []
 
     def init_biases(self):
         """ Initialize the biases of the network """
@@ -80,8 +80,8 @@ class NetworkBlueprint:
 
     def get_accuracy_per_epoch(self):
         """ Get a list of tuples of accuracy vs. batch for the performed training steps """
-        return self.accuracy_per_epoch
+        return [i[0] for i in self.accuracy_per_epoch], [i[1] for i in self.accuracy_per_epoch]
 
     def get_cost_per_batch(self):
         """ Get a list of tuples of cost vs. batch for the performed training steps """
-        return self.cost_per_batch
+        return [i[0] for i in self.cost_per_epoch], [i[1] for i in self.cost_per_epoch]
