@@ -29,7 +29,7 @@ class Plot:
         line = lines.Line2D(self.x_values, self.y_values)
         ax.add_line(line)
         ax.set_title(self.title)
-        ax.axis([0, len(self.x_values) + 1, 0, max(self.y_values) + 0.1])
+        ax.axis([0, len(self.x_values) + 1, 0, max(self.y_values) + 10])
         ax.set_xlabel(self.x_label)
         ax.set_ylabel(self.y_label)
         pyplot.savefig(self.filename)

@@ -26,7 +26,9 @@ def start(net_1=False, net_2=False, net_3_fully_connected_softmax=False, net_3_c
         run_net_1(training_data, test_data)
     if net_2:
         print(message(2, "simple net"))
-        run_net_2(training_data, test_data)
+        run_net_2(training_data, test_data,
+                  monitor_evaluation_accuracy=True,
+                  monitoring_evaluation_cost=False)
     if net_3_fully_connected_softmax:
         print(message(3, "CNN - layers = [fully connected, softmax]"))
         run_net_3_fully_connected_softmax()
@@ -46,26 +48,31 @@ def run_net_1(training_data, test_data):
     n_input, n_hidden, n_out = 784, 30, 10
     epochs, mini_batch_size, eta = 30, 10, 3.0
     net = network_test_1.NetworkTest1([n_input, n_hidden, n_out])
-    net.stochastic_gradient_descent(training_data, epochs, mini_batch_size, eta, test_data=test_data, stdout=False)
-    acc_x, acc_y = net.get_accuracy_per_epoch()
-    acc_x_label, acc_y_label = 'Epoch', 'Accuracy'
-    plt_title = 'Net 1 Accuracy'
-    plt_filename = 'net_1_accuracy'
-    plt = plot.Plot(acc_x, acc_x_label, acc_y, acc_y_label, plt_title, plt_filename)
+    net.stochastic_gradient_descent(training_data, epochs, mini_batch_size, eta, test_data=test_data, stdout=True)
+    x, y = net.get_accuracy_per_epoch()
+    plt = plot.Plot(x, 'Epoch', y, 'Accuracy (%)', 'Net 1 Accuracy', 'net_1_accuracy')
     plt.plot()
 
 
-def run_net_2(training_data, test_data):
+def run_net_2(training_data, test_data, monitor_evaluation_accuracy=True, monitoring_evaluation_cost=True):
     """ Runs net 2 """
-    n_input, n_hidden, n_out = 784, 30, 10
-    epochs, mini_batch_size, eta, lmbda = 60, 10, 0.5, 5
+    n_input, n_hidden, n_out = 784, 100, 10
+    epochs, mini_batch_size, eta, lmbda = 30, 10, 0.5, 5
     net = network_test_2.NetworkTest2([n_input, n_hidden, n_out])
     net.stochastic_gradient_descent(training_data, epochs, mini_batch_size, eta, lmbda,
                                     evaluation_data=test_data,
-                                    monitor_evaluation_accuracy=True,
-                                    monitor_evaluation_cost=False,
+                                    monitor_evaluation_accuracy=monitor_evaluation_accuracy,
+                                    monitor_evaluation_cost=monitoring_evaluation_cost,
                                     monitor_training_accuracy=True,
-                                    monitor_training_cost=False)
+                                    monitor_training_cost=True)
+    if monitor_evaluation_accuracy:
+        x, y = net.get_accuracy_per_epoch()
+        plt = plot.Plot(x, 'Epoch', y, 'Accuracy (%)', 'Net 2 Accuracy', 'net_2_accuracy')
+        plt.plot()
+    if monitoring_evaluation_cost:
+        x, y = net.get_cost_per_epoch()
+        plt = plot.Plot(x, 'Epoch', y, 'Total Cost', 'Net 2 Cost', 'net_2_cost')
+        plt.plot()
 
 
 def run_net_3_fully_connected_softmax():
@@ -194,8 +201,8 @@ def run_net_3_with_dropout():
 
 
 if __name__ == '__main__':
-    start(net_1=True,
-          net_2=False,
+    start(net_1=False,
+          net_2=True,
           net_3_fully_connected_softmax=False,
           net_3_conv_connected_softmax=False,
           run_net_3_with_relu=False,

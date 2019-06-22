@@ -50,10 +50,10 @@ class NetworkTest1(NetworkBlueprint):
                 self.update_mini_batch(mini_batch, eta)
             if test_data:
                 evaluation = self.evaluate(test_data)
-                curr_iteration_accuracy = (j + 1, evaluation / n_test * 100)
+                curr_iteration_accuracy = (j, (evaluation / n_test) * 100)
                 self.accuracy_per_epoch.append(curr_iteration_accuracy)
                 if stdout:
-                    print("Epoch {} : {} / {}".format(j + 1, evaluation, n_test))
+                    print("Epoch {} : {} / {}".format(j, evaluation, n_test))
             else:
                 if stdout:
                     print("Epoch {} complete".format(j + 1))

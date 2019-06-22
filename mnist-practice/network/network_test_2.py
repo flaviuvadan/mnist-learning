@@ -82,7 +82,7 @@ class NetworkTest2(NetworkBlueprint):
             if monitor_evaluation_accuracy:
                 accuracy = self.accuracy(evaluation_data)
                 evaluation_accuracy.append(accuracy)
-                self.accuracy_per_epoch.append((j + 1, (accuracy / n_data) * 100))
+                self.accuracy_per_epoch.append((j, (accuracy / n_data) * 100))
                 print("Accuracy on evaluation data:\t{} / {}".format(accuracy, n_data))
             print("Epoch {} training complete\n\n".format(j + 1))
         return evaluation_cost, evaluation_accuracy, training_cost, training_accuracy
