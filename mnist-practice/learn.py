@@ -1,6 +1,7 @@
 """ Learn uses the loader to feed the network and perform classification """
 
 from network import cnn, functions, loader, network_test_1, network_test_2, network_test_3
+import plot
 
 
 def message(net, extra):
@@ -45,7 +46,13 @@ def run_net_1(training_data, test_data):
     n_input, n_hidden, n_out = 784, 30, 10
     epochs, mini_batch_size, eta = 30, 10, 3.0
     net = network_test_1.NetworkTest1([n_input, n_hidden, n_out])
-    net.stochastic_gradient_descent(training_data, epochs, mini_batch_size, eta, test_data=test_data)
+    net.stochastic_gradient_descent(training_data, epochs, mini_batch_size, eta, test_data=test_data, stdout=False)
+    acc_x, acc_y = net.get_accuracy_per_epoch()
+    acc_x_label, acc_y_label = 'Epoch', 'Accuracy'
+    plt_title = 'Net 1 Accuracy'
+    plt_filename = 'net_1_accuracy'
+    plt = plot.Plot(acc_x, acc_x_label, acc_y, acc_y_label, plt_title, plt_filename)
+    plt.plot()
 
 
 def run_net_2(training_data, test_data):
@@ -186,9 +193,10 @@ def run_net_3_with_dropout():
                                     print_mini_batch_iteration=False)
 
 
-start(net_1=False,
-      net_2=False,
-      net_3_fully_connected_softmax=False,
-      net_3_conv_connected_softmax=False,
-      run_net_3_with_relu=True,
-      run_net_3_dropout=False)
+if __name__ == '__main__':
+    start(net_1=True,
+          net_2=False,
+          net_3_fully_connected_softmax=False,
+          net_3_conv_connected_softmax=False,
+          run_net_3_with_relu=False,
+          run_net_3_dropout=False)
