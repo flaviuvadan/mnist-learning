@@ -73,6 +73,7 @@ class NetworkTest1(NetworkBlueprint):
         Get the number of test inputs for which the networks outputs the correct result. Output is the index of
         whichever neuron in the final layer has the highest activation.
         :param test_data: data to perform testing against
+        :return: int - number of correctly predicted inputs
         """
         test_results = [(numpy.argmax(self.feed_forward(x)), y) for (x, y) in test_data]
         return sum(int(x == y) for (x, y) in test_results)

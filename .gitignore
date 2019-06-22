@@ -1,0 +1,5 @@
+# List of files to be ignored by Git
+
+/venv
+/.idea
+/mnist-practice/mnist.pkl
