@@ -25,7 +25,7 @@ class NetworkTest1(NetworkBlueprint):
         """ Randomly initialize weights from a standard normal """
         return [numpy.random.randn(y, x) for x, y in zip(self.sizes[:-1], self.sizes[1:])]
 
-    def stochastic_gradient_descent(self, training_data, epochs, mini_batch_size, eta, test_data=None):
+    def stochastic_gradient_descent(self, training_data, epochs, mini_batch_size, eta, test_data=None, stdout=False):
         """
         Train the network using a mini batch size of the training data
         :param training_data: [(input, output)]
@@ -33,6 +33,7 @@ class NetworkTest1(NetworkBlueprint):
         :param mini_batch_size: training data batch size
         :param eta: learning rate
         :param test_data: the data to perform testing against
+        :param stdout: whether to print results during SGD
         """
         training_data = list(training_data)
         n = len(training_data)
@@ -48,9 +49,14 @@ class NetworkTest1(NetworkBlueprint):
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
             if test_data:
-                print("Epoch {} : {} / {}".format(j + 1, self.evaluate(test_data), n_test))
+                evaluation = self.evaluate(test_data)
+                curr_iteration_accuracy = (j + 1, evaluation/n_test)
+                self.accuracy_per_epoch.append(curr_iteration_accuracy)
+                if stdout:
+                    print("Epoch {} : {} / {}".format(j + 1, evaluation, n_test))
             else:
-                print("Epoch {} complete".format(j + 1))
+                if stdout:
+                    print("Epoch {} complete".format(j + 1))
 
     def update_mini_batch(self, mini_batch, eta):
         """
