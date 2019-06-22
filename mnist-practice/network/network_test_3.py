@@ -90,7 +90,7 @@ class NetworkTest3:
                 iteration = training_batches * epoch + mbi
                 if iteration % 1000 == 0 and print_mini_batch_iteration:
                     print("Training mini-batch {}".format(iteration))
-                cost_ij = train_mini_batch(mbi)
+                # cost_ij = train_mini_batch(mbi)
                 if (iteration + 1) % training_batches == 0:
                     validation_accuracy = numpy.mean(
                         [validate_mini_batch_accuracy(j) for j in range(validation_batches)])

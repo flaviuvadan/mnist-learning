@@ -64,9 +64,9 @@ class NetworkTest2(NetworkBlueprint):
                 self.update_mini_batch(mini_batch, eta, lmbda, len(training_data))
 
             if monitor_training_cost:
-                cost = self.total_cost(training_data, lmbda)
-                training_cost.append(cost)
-                print("Cost on training data:\t{}".format(cost))
+                c = self.total_cost(training_data, lmbda)
+                training_cost.append(c)
+                print("Cost on training data:\t{}".format(c))
 
             if monitor_training_accuracy:
                 accuracy = self.accuracy(training_data, convert=True)
@@ -76,11 +76,13 @@ class NetworkTest2(NetworkBlueprint):
             if monitor_evaluation_cost:
                 cost = self.total_cost(evaluation_data, lmbda, convert=True)
                 evaluation_cost.append(cost)
+                self.cost_per_epoch.append((j + 1, cost))
                 print("Cost on evaluation data:\t{} ".format(cost))
 
             if monitor_evaluation_accuracy:
                 accuracy = self.accuracy(evaluation_data)
                 evaluation_accuracy.append(accuracy)
+                self.accuracy_per_epoch.append((j + 1, (accuracy / n_data) * 100))
                 print("Accuracy on evaluation data:\t{} / {}".format(accuracy, n_data))
             print("Epoch {} training complete\n\n".format(j + 1))
         return evaluation_cost, evaluation_accuracy, training_cost, training_accuracy
@@ -128,10 +130,10 @@ class NetworkTest2(NetworkBlueprint):
         :param convert: False if data is validation/test set, True if data is training set
         :return: cost float
         """
-        cost = 0.0
+        c = 0.0
         for x, y in data:
             a = self.feed_forward(x)
             if convert:
                 y = Functions.vectorized_result(y)
-            cost = cost + self.cost.fn(a, y) / len(data)
-        return cost + 1 / 2 * (lmbda / len(data)) * sum(numpy.linalg.norm(w) ** 2 for w in self.weights)
+            c += self.cost.fn(a, y) / len(data)
+        return c + 1 / 2 * (lmbda / len(data)) * sum(numpy.linalg.norm(w) ** 2 for w in self.weights)

@@ -49,7 +49,7 @@ class SimpleCost(Cost):
     @staticmethod
     def delta(z, a, y):
         """ Get the delta of the cost function """
-        pass
+        return a - y
 
 
 class QuadraticCost(Cost):
@@ -67,7 +67,7 @@ class QuadraticCost(Cost):
     @staticmethod
     def delta(z, a, y):
         """ Get the delta of the cost function """
-        return (a - y) * Functions.sigmoid_prime(z)
+        return a - y
 
 
 class CrossEntropyCost(Cost):

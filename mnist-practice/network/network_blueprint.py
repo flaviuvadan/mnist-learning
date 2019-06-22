@@ -61,19 +61,12 @@ class NetworkBlueprint:
 
         # backward pass
         # this is the error of the last layer
-        delta = self.cost.fn(activations[-1], y) * Functions.sigmoid_prime(zs[-1])
+        delta = self.cost.delta(zs[-1], activations[-1], y) * Functions.sigmoid_prime(zs[-1])
         nabla_b[-1] = delta
         nabla_w[-1] = numpy.dot(delta, activations[-2].transpose())
-
-        # Note that the variable l in the loop below is used a little
-        # differently to the notation in Chapter 2 of the book.  Here,
-        # l = 1 means the last layer of neurons, l = 2 is the
-        # second-last layer, and so on.  It's a renumbering of the
-        # scheme in the book, used here to take advantage of the fact
-        # that Python can use negative indices in lists.
+        # going back through the net
         for l in range(2, self.num_layers):
-            z = zs[-l]
-            delta = numpy.dot(self.weights[-l + 1].transpose(), delta) * Functions.sigmoid_prime(z)
+            delta = numpy.dot(self.weights[-l + 1].transpose(), delta) * Functions.sigmoid_prime(zs[-l])
             nabla_b[-l] = delta
             nabla_w[-l] = numpy.dot(delta, activations[-l - 1].transpose())
         return nabla_b, nabla_w
@@ -82,6 +75,6 @@ class NetworkBlueprint:
         """ Get a list of tuples of accuracy vs. batch for the performed training steps """
         return [i[0] for i in self.accuracy_per_epoch], [i[1] for i in self.accuracy_per_epoch]
 
-    def get_cost_per_batch(self):
+    def get_cost_per_epoch(self):
         """ Get a list of tuples of cost vs. batch for the performed training steps """
         return [i[0] for i in self.cost_per_epoch], [i[1] for i in self.cost_per_epoch]
