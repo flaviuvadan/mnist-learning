@@ -17,6 +17,10 @@ class NetworkBlueprint:
         self.weights = self.init_weights()
         self.cost = cost
 
+        # follow list of class variables are for monitoring different metrics
+        self.accuracy_per_batch = []
+        self.cost_per_batch = []
+
     def init_biases(self):
         """ Initialize the biases of the network """
         raise NotImplementedError
@@ -73,3 +77,11 @@ class NetworkBlueprint:
             nabla_b[-l] = delta
             nabla_w[-l] = numpy.dot(delta, activations[-l - 1].transpose())
         return nabla_b, nabla_w
+
+    def get_accuracy_per_batch(self):
+        """ Get a list of tuples of accuracy vs. batch for the performed training steps """
+        return self.accuracy_per_batch
+
+    def get_cost_per_batch(self):
+        """ Get a list of tuples of cost vs. batch for the performed training steps """
+        return self.cost_per_batch
