@@ -52,6 +52,8 @@ Network 2 is trained on the MNIST dataset. The cost used in training the network
 
 # Limitations
 
+- Random Gaussian sampling for initialization of weights and biases; a consistent initialization could make the results 
+more replicable;
 - Accuracy should not be the only reported metric; what other metrics could be reported? Cost, etc.
 - The CNN implementation uses Theano; would a TensorFlow implementation improve the results?
 
